@@ -4,6 +4,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart'; // Importante
 import 'presentation/screens/home_screen.dart';
 import 'presentation/providers/theme_provider.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'presentation/providers/wallpaper_provider.dart';
+
 void main() async {
   // Asegura que los bindings de Flutter estén listos para operaciones async
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,7 +14,14 @@ void main() async {
   // Carga el archivo .env
   await dotenv.load(fileName: ".env");
 
-  runApp(const ProviderScope(child: MainApp()));
+  final sharedPreferences = await SharedPreferences.getInstance();
+
+  runApp(ProviderScope(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+    ],
+    child: const MainApp(),
+  ));
 }
 
 class MainApp extends ConsumerWidget {

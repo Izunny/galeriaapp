@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../providers/wallpaper_provider.dart';
-
+import '../screens/detail_screen.dart';
 class WallpaperGrid extends ConsumerStatefulWidget {
   const WallpaperGrid({super.key});
 
@@ -82,12 +82,23 @@ class _WallpaperGridState extends ConsumerState<WallpaperGrid> {
           }
 
           final wallpaper = state.wallpapers[index];
-          return ClipRidge(
-            borderRadius: BorderRadius.circular(16),
-            child: Stack(
-              children: [
-                CachedNetworkImage(
-                  imageUrl: wallpaper.url,
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailScreen(wallpaper: wallpaper),
+                ),
+              );
+            },
+            child: ClipRidge(
+              borderRadius: BorderRadius.circular(16),
+              child: Stack(
+                children: [
+                  Hero(
+                    tag: wallpaper.id,
+                    child: CachedNetworkImage(
+                      imageUrl: wallpaper.url,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     height: 200, // Altura por defecto mientras carga
@@ -100,7 +111,8 @@ class _WallpaperGridState extends ConsumerState<WallpaperGrid> {
                     child: const Icon(Icons.error),
                   ),
                 ),
-                Positioned(
+              ),
+              Positioned(
                   bottom: 0,
                   left: 0,
                   right: 0,
@@ -129,6 +141,7 @@ class _WallpaperGridState extends ConsumerState<WallpaperGrid> {
                   ),
                 ),
               ],
+            ),
             ),
           );
         },

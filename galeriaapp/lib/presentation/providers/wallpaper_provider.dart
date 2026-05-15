@@ -1,8 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/datasources/unsplash_client.dart';
 import '../../data/repositories/wallpaper_repository_impl.dart';
 import '../../domain/entities/wallpaper.dart';
 import '../../domain/repositories/wallpaper_repository.dart';
+
+final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+  throw UnimplementedError();
+});
 
 final unsplashClientProvider = Provider<UnsplashClient>((ref) {
   return UnsplashClient();
@@ -10,7 +15,8 @@ final unsplashClientProvider = Provider<UnsplashClient>((ref) {
 
 final wallpaperRepositoryProvider = Provider<WallpaperRepository>((ref) {
   final client = ref.read(unsplashClientProvider);
-  return WallpaperRepositoryImpl(client: client);
+  final prefs = ref.read(sharedPreferencesProvider);
+  return WallpaperRepositoryImpl(client: client, prefs: prefs);
 });
 
 class WallpaperState {
