@@ -4,7 +4,7 @@ import 'dart:io';
 void main() async {
   final client = HttpClient();
   try {
-    final request = await client.getUrl(Uri.parse('https://api.unsplash.com/photos?page=1&per_page=1'));
+    final request = await client.getUrl(Uri.parse('https://api.unsplash.com/users/nasa/photos?page=1&per_page=1'));
     request.headers.add('Authorization', 'Client-ID ET7UrmjptWQIQ8ihWaR5RsJEfEiyCOrJQMY7F1B6Qek');
     request.headers.add('Accept-Version', 'v1');
     

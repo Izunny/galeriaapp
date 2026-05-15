@@ -44,11 +44,45 @@ class UnsplashClient {
     return response.data as List<dynamic>;
   }
 
-  Future<List<dynamic>> searchPhotos(String query, int page, {int perPage = 20}) async {
+  Future<List<dynamic>> searchPhotos(String query, int page, {int perPage = 20, String lang = 'es'}) async {
     final response = await dio.get(
       '/search/photos',
-      queryParameters: {'query': query, 'page': page, 'per_page': perPage},
+      queryParameters: {
+        'query': query,
+        'page': page,
+        'per_page': perPage,
+        'lang': lang, // Idioma seleccionado por el usuario
+      },
     );
     return response.data['results'] as List<dynamic>;
+  }
+
+  Future<List<dynamic>> getUserPhotos(String username, int page, {int perPage = 20}) async {
+    final response = await dio.get(
+      '/users/$username/photos',
+      queryParameters: {'page': page, 'per_page': perPage},
+    );
+    return response.data as List<dynamic>;
+  }
+
+  Future<String?> searchUserUsername(String query) async {
+    try {
+      final response = await dio.get(
+        '/search/users',
+        queryParameters: {'query': query, 'per_page': 1},
+      );
+      final results = response.data['results'] as List<dynamic>;
+      if (results.isNotEmpty) {
+        return results.first['username'] as String;
+      }
+    } catch (e) {
+      print("Error resolving user: $e");
+    }
+    return null;
+  }
+
+  Future<String> trackDownload(String photoId) async {
+    final response = await dio.get('/photos/$photoId/download');
+    return response.data['url'] as String;
   }
 }

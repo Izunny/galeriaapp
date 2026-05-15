@@ -1,0 +1,28 @@
+# Unsplash Wallpapers App - Implementation Walkthrough
+
+The application has been successfully built following Clean Architecture principles and incorporating all of your requirements.
+
+## What was implemented
+
+### 1. Data Layer (`lib/data`)
+- **UnsplashClient**: Configured Dio with interceptors and added methods to fetch `curated photos` and `search photos`.
+- **WallpaperModel**: A JSON parsing model that converts Unsplash API responses into the `Wallpaper` entity.
+- **WallpaperRepositoryImpl**: The implementation of the domain interface that handles calling the API client and returning clean data.
+
+### 2. Presentation Layer (`lib/presentation`)
+- **WallpaperProvider**: Uses Riverpod `StateNotifier` to maintain the state of the wallpaper grid. It handles initial loading, paginated data loading, error states, and search queries perfectly.
+- **HomeScreen**: Rebuilt to include a custom Search Bar and a Theme Toggle button on the AppBar. It watches the network status and switches to the offline mode if no connection is detected.
+- **WallpaperGrid**: Implemented using `flutter_staggered_grid_view` to provide a beautiful Masonry-style layout (like Pinterest). It listens to a `ScrollController` to trigger infinite pagination when the user reaches the bottom. It also uses `cached_network_image` to automatically cache downloaded images for offline support and faster load times.
+- **ThemeProvider**: Persists the Dark/Light mode selection to local storage using `shared_preferences`.
+
+## Validation Results
+
+- The app compiles successfully.
+- State management efficiently updates UI elements.
+- The Masonry grid adjusts to different screen sizes and aspect ratios.
+- API requests are optimized with pagination.
+
+> [!TIP]
+> Ensure your `.env` file in the root directory contains the Unsplash API key like so: `UNSPLASH_ACCESS_KEY=your_key_here`. 
+
+You can now test the app by running it!

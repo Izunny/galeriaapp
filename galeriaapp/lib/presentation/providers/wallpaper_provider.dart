@@ -26,6 +26,7 @@ class WallpaperState {
   final String errorMessage;
   final int page;
   final String query;
+  final String lang;
 
   WallpaperState({
     this.wallpapers = const [],
@@ -34,6 +35,7 @@ class WallpaperState {
     this.errorMessage = '',
     this.page = 1,
     this.query = '',
+    this.lang = 'es',
   });
 
   WallpaperState copyWith({
@@ -43,6 +45,7 @@ class WallpaperState {
     String? errorMessage,
     int? page,
     String? query,
+    String? lang,
   }) {
     return WallpaperState(
       wallpapers: wallpapers ?? this.wallpapers,
@@ -51,6 +54,7 @@ class WallpaperState {
       errorMessage: errorMessage ?? this.errorMessage,
       page: page ?? this.page,
       query: query ?? this.query,
+      lang: lang ?? this.lang,
     );
   }
 }
@@ -74,7 +78,18 @@ class WallpaperNotifier extends StateNotifier<WallpaperState> {
     try {
       List<Wallpaper> newWallpapers;
       if (state.query.isNotEmpty) {
-        newWallpapers = await repository.searchWallpapers(state.query, state.page);
+        if (state.query.startsWith('@') && state.query.length > 1) {
+          String authorQuery = state.query.substring(1).trim();
+          
+          final resolvedUsername = await repository.resolveAuthorUsername(authorQuery);
+          if (resolvedUsername == null) {
+            throw Exception('Autor no encontrado para: "$authorQuery"');
+          }
+
+          newWallpapers = await repository.searchWallpapersByAuthor(resolvedUsername, state.page);
+        } else {
+          newWallpapers = await repository.searchWallpapers(state.query, state.page, lang: state.lang);
+        }
       } else {
         newWallpapers = await repository.getCuratedWallpapers(state.page);
       }
@@ -96,6 +111,15 @@ class WallpaperNotifier extends StateNotifier<WallpaperState> {
   void search(String query) {
     state = state.copyWith(query: query);
     fetchWallpapers(reset: true);
+  }
+
+  void setLanguage(String lang) {
+    if (state.lang != lang) {
+      state = state.copyWith(lang: lang);
+      if (state.query.isNotEmpty) {
+        fetchWallpapers(reset: true);
+      }
+    }
   }
 }
 

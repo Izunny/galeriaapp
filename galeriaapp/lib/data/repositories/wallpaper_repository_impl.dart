@@ -15,7 +15,9 @@ class WallpaperRepositoryImpl implements WallpaperRepository {
   Future<List<Wallpaper>> getCuratedWallpapers(int page) async {
     try {
       final data = await client.getCuratedPhotos(page);
-      final wallpapers = data.map((json) => WallpaperModel.fromJson(json)).toList();
+      final wallpapers = data
+          .map((json) => WallpaperModel.fromJson(json))
+          .toList();
 
       // Cache the first page for offline use
       if (page == 1) {
@@ -30,7 +32,9 @@ class WallpaperRepositoryImpl implements WallpaperRepository {
         final cachedString = prefs.getString('cached_wallpapers');
         if (cachedString != null) {
           final List<dynamic> cachedJson = jsonDecode(cachedString);
-          return cachedJson.map((json) => WallpaperModel.fromCacheJson(json)).toList();
+          return cachedJson
+              .map((json) => WallpaperModel.fromCacheJson(json))
+              .toList();
         }
       }
       throw Exception('Failed to load curated wallpapers: $e');
@@ -38,12 +42,43 @@ class WallpaperRepositoryImpl implements WallpaperRepository {
   }
 
   @override
-  Future<List<Wallpaper>> searchWallpapers(String query, int page) async {
+  Future<List<Wallpaper>> searchWallpapers(
+    String query,
+    int page, {
+    String lang = 'es',
+  }) async {
     try {
-      final data = await client.searchPhotos(query, page);
+      final data = await client.searchPhotos(query, page, lang: lang);
       return data.map((json) => WallpaperModel.fromJson(json)).toList();
     } catch (e) {
       throw Exception('Failed to search wallpapers: $e');
+    }
+  }
+
+  @override
+  Future<String?> resolveAuthorUsername(String query) async {
+    return await client.searchUserUsername(query);
+  }
+
+  @override
+  Future<List<Wallpaper>> searchWallpapersByAuthor(
+    String username,
+    int page,
+  ) async {
+    try {
+      final data = await client.getUserPhotos(username, page);
+      return data.map((json) => WallpaperModel.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Usuario sin fotos o no encontrado: $e');
+    }
+  }
+
+  @override
+  Future<String> trackDownload(String photoId) async {
+    try {
+      return await client.trackDownload(photoId);
+    } catch (e) {
+      throw Exception('Error al descargar la imagen: $e');
     }
   }
 }

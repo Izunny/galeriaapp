@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/localization/app_localizations.dart';
 import '../providers/wallpaper_provider.dart';
 import '../screens/detail_screen.dart';
 class WallpaperGrid extends ConsumerStatefulWidget {
@@ -35,6 +36,7 @@ class _WallpaperGridState extends ConsumerState<WallpaperGrid> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(wallpaperProvider);
+    final loc = ref.watch(appLocalizationsProvider);
 
     if (state.wallpapers.isEmpty && state.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -51,7 +53,7 @@ class _WallpaperGridState extends ConsumerState<WallpaperGrid> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => ref.read(wallpaperProvider.notifier).fetchWallpapers(reset: true),
-              child: const Text('Retry'),
+              child: Text(loc['retry']!),
             )
           ],
         ),
@@ -59,7 +61,7 @@ class _WallpaperGridState extends ConsumerState<WallpaperGrid> {
     }
 
     if (state.wallpapers.isEmpty && !state.isLoading) {
-      return const Center(child: Text('No wallpapers found.'));
+      return Center(child: Text(loc['no_wallpapers']!));
     }
 
     return RefreshIndicator(

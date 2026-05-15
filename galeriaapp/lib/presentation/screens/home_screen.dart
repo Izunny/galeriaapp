@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import '../providers/network_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/wallpaper_provider.dart';
+import '../../core/localization/app_localizations.dart';
 import '../widgets/wallpaper_grid.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -26,27 +27,55 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final networkStatus = ref.watch(networkStatusProvider);
     final themeMode = ref.watch(themeProvider);
+    final currentLang = ref.watch(wallpaperProvider).lang;
+    final loc = ref.watch(appLocalizationsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Unsplash Wallpapers', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'GaleriaApp',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         actions: [
+          PopupMenuButton<String>(
+            initialValue: currentLang,
+            icon: const Icon(Icons.language),
+            tooltip: loc['change_lang'],
+            onSelected: (String lang) {
+              ref.read(wallpaperProvider.notifier).setLanguage(lang);
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'es',
+                child: Text(loc['spanish']!),
+              ),
+              PopupMenuItem<String>(
+                value: 'en',
+                child: Text(loc['english']!),
+              ),
+            ],
+          ),
           IconButton(
-            icon: Icon(themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
+            icon: Icon(
+              themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode,
+            ),
             onPressed: () {
               ref.read(themeProvider.notifier).toggleTheme();
             },
-          )
+          ),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search wallpapers...',
+                hintText: loc['search_hint'],
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.clear),
@@ -72,7 +101,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: networkStatus.when(
         data: (status) {
           if (status.contains(ConnectivityResult.none)) {
-            return _buildNoConnectionWidget();
+            return _buildNoConnectionWidget(loc);
           }
           return const WallpaperGrid();
         },
@@ -82,18 +111,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildNoConnectionWidget() {
+  Widget _buildNoConnectionWidget(Map<String, String> loc) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.signal_wifi_connected_no_internet_4, size: 80, color: Colors.grey),
+          const Icon(
+            Icons.signal_wifi_connected_no_internet_4,
+            size: 80,
+            color: Colors.grey,
+          ),
           const SizedBox(height: 16),
-          const Text('Modo Offline', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+          Text(
+            loc['offline_title']!,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
             child: Text(
-              'No tienes conexión a internet. Mostrando contenido en caché si está disponible.',
+              loc['offline_desc']!,
               textAlign: TextAlign.center,
             ),
           ),
@@ -101,7 +137,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             onPressed: () {
               // Simular reintento de conexión
             },
-            child: const Text('Reintentar'),
+            child: Text(loc['retry']!),
           ),
         ],
       ),

@@ -1,0 +1,16 @@
+# Unsplash Wallpapers App - Tasks
+
+- [x] Configure dependencies (`flutter_dotenv`).
+- [x] Create Domain Layer (`Entities`, `Repository Interface`).
+- [ ] Implement Data Layer:
+  - [x] Add `flutter_staggered_grid_view` dependency.
+  - [x] Create `WallpaperModel` to parse JSON from Unsplash.
+  - [x] Update `UnsplashClient` to include fetching methods (Search & Curated).
+  - [x] Create `WallpaperRepositoryImpl`.
+- [x] Implement Presentation Layer:
+  - [x] Create `theme_provider.dart` for Dark/Light mode using SharedPreferences.
+  - [x] Create `wallpaper_provider.dart` for fetching and infinite pagination state.
+  - [x] Build `WallpaperGrid` widget.
+  - [x] Build `WallpaperCard` widget with loading/error handling.
+  - [x] Update `HomeScreen` with Search bar and Masonry Grid.
+- [x] Polish UI (animations, aesthetics, WOW factor).
