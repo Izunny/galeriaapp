@@ -1,5 +1,0 @@
-- `[x]` Create Detail Screen (`lib/presentation/screens/detail_screen.dart`)
-- `[x]` Update `WallpaperModel` with `toJson` and `fromCacheJson` (`lib/data/models/wallpaper_model.dart`)
-- `[x]` Update `main.dart` and `wallpaper_provider.dart` to initialize and expose `SharedPreferences`
-- `[x]` Update `WallpaperRepositoryImpl` to implement caching logic (`lib/data/repositories/wallpaper_repository_impl.dart`)
-- `[x]` Update `WallpaperGrid` with Navigation to Detail Screen (`lib/presentation/widgets/wallpaper_grid.dart`)
