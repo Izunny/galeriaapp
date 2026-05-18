@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // Importante
-import 'presentation/screens/home_screen.dart';
+import 'presentation/screens/splash_screen.dart';
 import 'presentation/providers/theme_provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,12 +16,14 @@ void main() async {
 
   final sharedPreferences = await SharedPreferences.getInstance();
 
-  runApp(ProviderScope(
-    overrides: [
-      sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-    ],
-    child: const MainApp(),
-  ));
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends ConsumerWidget {
@@ -33,11 +35,19 @@ class MainApp extends ConsumerWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Unsplash App',
+      title: 'GaleríaApp',
       themeMode: themeMode,
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue, brightness: Brightness.light),
-      darkTheme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue, brightness: Brightness.dark),
-      home: const HomeScreen(), // Iniciamos en la pantalla de inicio
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.blue,
+        brightness: Brightness.light,
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.blue,
+        brightness: Brightness.dark,
+      ),
+      home: const VideoSplashScreen(), // Iniciamos en la pantalla de splash
     );
   }
 }
