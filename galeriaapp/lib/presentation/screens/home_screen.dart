@@ -9,6 +9,7 @@ import '../../core/localization/app_localizations.dart';
 import '../widgets/wallpaper_grid.dart';
 import 'search_history_screen.dart';
 import 'saved_wallpapers_screen.dart';
+import 'error_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +18,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
+//aqui se implementa la pantalla principal de la aplicación, que incluye un buscador, un menú lateral para acceder a favoritos, historial y descargas, y muestra una cuadrícula de wallpapers. También maneja el estado de la conexión a internet para mostrar un banner de advertencia o una pantalla de error personalizada en caso de problemas de red.
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
 
@@ -33,7 +35,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final currentLang = ref.watch(wallpaperProvider).lang;
     final loc = ref.watch(appLocalizationsProvider);
     final recentSearches = ref.watch(searchHistoryProvider);
-
+    // aqui se construye la interfaz de usuario, incluyendo el AppBar con el buscador y los botones de configuración,
+    //el Drawer para navegación, y el cuerpo que muestra la cuadrícula de wallpapers
+    //o mensajes de error según el estado de la conexión a internet y los datos disponibles.
     return Scaffold(
       drawer: Drawer(
         width: 200,
@@ -43,8 +47,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             DrawerHeader(
               decoration: BoxDecoration(
                 color: themeMode == ThemeMode.dark
-                    ? Colors.grey[900]
-                    : const Color.fromARGB(255, 71, 42, 199),
+                    ? const Color.fromARGB(255, 100, 40, 95)
+                    : Colors.blue.shade700,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,6 +116,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
       appBar: AppBar(
+        // aqui se configura el AppBar con el título, el botón de cambio de idioma, el botón de cambio de tema, y un TextField para realizar búsquedas de wallpapers.
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -182,6 +187,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
       body: networkStatus.when(
+        //aqui se maneja el estado de la conexión a internet para mostrar un banner de advertencia
         data: (status) {
           return Column(
             children: [
@@ -221,6 +227,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               if (recentSearches.isNotEmpty)
                 Padding(
+                  //aqui se muestra una sección de "Búsquedas recientes" debajo del banner de advertencia si el usuario ha realizado búsquedas anteriormente
                   padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -273,7 +280,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, stack) => Center(child: Text('Error: $e')),
+        error: (e, stack) => Center(
+          child: ErrorScreen(
+            title: loc['offline_title'] ?? 'Error',
+            message: loc['offline_desc'] ?? e.toString(),
+            retryLabel: loc['retry'],
+            onRetry: () {
+              ref.read(wallpaperProvider.notifier).fetchWallpapers(reset: true);
+            },
+          ),
+        ),
       ),
     );
   }

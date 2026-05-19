@@ -39,6 +39,12 @@ Aplicación Flutter para explorar, descargar y guardar fondos de pantalla desde 
   - **Banner**: Cuando no hay conexión, aparece banner naranja indicando "Sin conexión. Se muestra el contenido en caché disponible."
   - **Red monitoring**: `lib/presentation/providers/network_provider.dart` con StreamProvider
 
+### 3.1 **Manejo de errores (API / Offline)** ✅
+- **Ubicación**: `lib/presentation/screens/error_screen.dart`
+- **Qué hace**: Muestra una pantalla dedicada con una ilustración (gatito triste) y un botón `Reintentar` cuando hay errores críticos como falta de conexión o errores de la API (ej. 401 Unauthorized).
+- **Detección 401**: `lib/presentation/widgets/wallpaper_grid.dart` detecta mensajes de error que contienen `401`, `unauthorized` o `client_id` y muestra la `ErrorScreen` con el mensaje localizado.
+- **Assets**: Coloca tu ilustración en `assets/images/sad_cat.png`. Si no existe, la pantalla usa `assets/images/icon.png` como fallback.
+
 ### 4. **Recent Searches como Sugerencias** ✅
 - **Ubicación**: `lib/presentation/screens/home_screen.dart` (líneas 60-85 aprox)
 - **UI**: ActionChips debajo del SearchTextField
@@ -56,6 +62,10 @@ Aplicación Flutter para explorar, descargar y guardar fondos de pantalla desde 
   - Doble-tap toggle entre zoom normal y 2.5x
   - Navegación suave con transición fade de 180ms
   - Hero animation para continuidad visual
+   - Implementación técnica: usa `InteractiveViewer` con `TransformationController` en `lib/presentation/screens/fullscreen_image_screen.dart`.
+     - `panEnabled: true`, `scaleEnabled: true`, `minScale: 1.0`, `maxScale: 4.0`.
+     - `onDoubleTap` alterna entre escala 1x y 2.5x mediante `Matrix4.diagonal3Values(...)`.
+     - La navegación desde `detail_screen.dart` usa `PageRouteBuilder` con `transitionDuration: Duration(milliseconds: 180)` para reducir la latencia percibida al doble-tap.
 
 ---
 

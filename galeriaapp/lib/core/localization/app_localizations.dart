@@ -5,7 +5,8 @@ final appLocalizationsProvider = Provider<Map<String, String>>((ref) {
   final lang = ref.watch(wallpaperProvider).lang;
   return lang == 'en' ? _en : _es;
 });
-
+//aqui se define un provider de localización que devuelve un mapa de cadenas según el idioma seleccionado en el estado del proveedor de wallpapers.
+//Se tienen dos mapas, uno para español y otro para inglés, con las traducciones de los textos usados en la aplicación.
 const _es = {
   'search_hint': 'Buscar fondos o @autor...',
   'offline_title': 'Modo Offline',
@@ -31,6 +32,8 @@ const _es = {
   'remove_search_query': 'Eliminar búsqueda',
   'offline_cache_banner':
       'Sin conexión. Se muestra el contenido en caché disponible.',
+  'api_error_title': 'Error de API 401',
+  'api_error_desc': 'La API no está disponible. Comprueba la configuración.',
   'recent_searches': 'Búsquedas recientes',
 };
 
@@ -58,5 +61,7 @@ const _en = {
   'clear_history': 'Clear history',
   'remove_search_query': 'Remove search',
   'offline_cache_banner': 'No connection. Showing available cached content.',
+  'api_error_title': 'API Error 401',
+  'api_error_desc': 'The API is unavailable. Check your configuration.',
   'recent_searches': 'Recent searches',
 };

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class FullscreenImageScreen extends StatefulWidget {
   final String imageUrl;
   final String tag;
-
+  //aqui se define la pantalla de imagen a pantalla completa, que recibe la URL de la imagen y una etiqueta para la animación Hero.
+  //Permite hacer zoom con doble toque y arrastrar la imagen cuando está ampliada.
   const FullscreenImageScreen({
     super.key,
     required this.imageUrl,
@@ -15,6 +16,8 @@ class FullscreenImageScreen extends StatefulWidget {
   State<FullscreenImageScreen> createState() => _FullscreenImageScreenState();
 }
 
+//aqui se implementa la lógica para manejar el zoom y el desplazamiento de la imagen,
+//utilizando un TransformationController para controlar la transformación de la imagen dentro de un InteractiveViewer.
 class _FullscreenImageScreenState extends State<FullscreenImageScreen> {
   final TransformationController _transformationController =
       TransformationController();

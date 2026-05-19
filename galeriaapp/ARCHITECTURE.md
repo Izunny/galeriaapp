@@ -199,6 +199,17 @@ CachedNetworkImage(imageUrl, ...)
 📁 lib/presentation/screens/home_screen.dart
    └─ if (networkStatus == ConnectivityResult.none)
       └─ Show orange banner: "Sin conexión..."
+
+   ### Requisito 4.1: Manejo de Errores API / 401
+
+   ```
+   📁 lib/presentation/widgets/wallpaper_grid.dart
+      └─ Al recibir `state.hasError == true`, inspecciona `state.errorMessage`.
+         ├─ Si contiene `401`, `unauthorized` o `client_id` → muestra `ErrorScreen`.
+         └─ `ErrorScreen` (lib/presentation/screens/error_screen.dart) muestra una ilustración local `assets/images/sad_cat.png`, texto localizado y botón `Reintentar`.
+
+   Rationale: brindar feedback visual claro cuando la API rechaza la petición (clave inválida/limite) y ofrecer acción inmediata de reintento.
+   ```
 ```
 
 ### Requisito 5: Recent Searches UI
@@ -373,13 +384,13 @@ try {
 } catch (e) {
   final cached = await repository._loadCache(key);
   if (cached != null) {
-    state = state.copyWith(wallpapers: cached); // Fallback
-  } else {
-    state = state.copyWith(hasError: true, errorMessage: e.toString());
-  }
-}
+   ├─ InteractiveViewer(transformationController)
+   │  ├─ panEnabled: true
+   │  ├─ scaleEnabled: true
+   │  ├─ minScale: 1.0, maxScale: 4.0
+   │  └─ Child: Hero + CachedNetworkImage
 ```
 
 ---
-
-**Documento técnico completado - Mayo 2026**
+   └─ PageRouteBuilder
+      └─ transitionDuration: 180ms (fade) / reverse: 140ms (fade)
