@@ -22,3 +22,19 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
+
+subprojects {
+    pluginManager.withPlugin("com.android.library") {
+        val androidExt = project.extensions.findByName("android")
+        if (androidExt != null) {
+            try {
+                val namespaceProp = androidExt.javaClass.getMethod("getNamespace").invoke(androidExt)
+                if (namespaceProp == null) {
+                    androidExt.javaClass.getMethod("setNamespace", String::class.java).invoke(androidExt, project.group.toString())
+                }
+            } catch (e: Exception) {
+                // Ignore if methods don't exist
+            }
+        }
+    }
+}

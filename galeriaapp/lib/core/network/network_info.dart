@@ -5,6 +5,7 @@ abstract class NetworkInfo {
   Stream<List<ConnectivityResult>> get onConnectivityChanged;
 }
 
+// Esta clase define una interfaz para obtener el estado de la conexión a internet y escuchar cambios en la conectividad,
 class NetworkInfoImpl implements NetworkInfo {
   final Connectivity connectivity;
 

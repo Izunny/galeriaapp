@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 // Provider con estado inicial inmediato y cambios en tiempo real.
+// Este provider emite el estado de conectividad actual al iniciar y luego emite cambios cada vez que la conectividad cambia.
 final networkStatusProvider = StreamProvider<List<ConnectivityResult>>((
   ref,
 ) async* {
