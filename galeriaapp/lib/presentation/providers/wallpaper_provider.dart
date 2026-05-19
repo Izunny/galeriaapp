@@ -4,21 +4,26 @@ import '../../data/datasources/unsplash_client.dart';
 import '../../data/repositories/wallpaper_repository_impl.dart';
 import '../../domain/entities/wallpaper.dart';
 import '../../domain/repositories/wallpaper_repository.dart';
+//aqui se definen los providers relacionados con los wallpapers,
+//incluyendo el repositorio que interactúa con la API de Unsplash y
+//el estado de los wallpapers que se muestra en la aplicación.
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError();
 });
-
+// Este provider se encarga de proporcionar una instancia de SharedPreferences a lo largo de la aplicación,
 final unsplashClientProvider = Provider<UnsplashClient>((ref) {
   return UnsplashClient();
 });
-
+// Este provider se encarga de proporcionar una instancia del cliente de Unsplash,
+//que es responsable de hacer las solicitudes a la API de Unsplash para obtener los wallpapers.
 final wallpaperRepositoryProvider = Provider<WallpaperRepository>((ref) {
   final client = ref.read(unsplashClientProvider);
   final prefs = ref.read(sharedPreferencesProvider);
   return WallpaperRepositoryImpl(client: client, prefs: prefs);
 });
 
+// Este provider se encarga de proporcionar una instancia del repositorio de wallpapers,
 class WallpaperState {
   final List<Wallpaper> wallpapers;
   final bool isLoading;
@@ -59,6 +64,7 @@ class WallpaperState {
   }
 }
 
+// Este es el estado que maneja el provider de wallpapers, que incluye la lista de wallpapers,
 class WallpaperNotifier extends StateNotifier<WallpaperState> {
   final WallpaperRepository repository;
 
@@ -80,15 +86,24 @@ class WallpaperNotifier extends StateNotifier<WallpaperState> {
       if (state.query.isNotEmpty) {
         if (state.query.startsWith('@') && state.query.length > 1) {
           String authorQuery = state.query.substring(1).trim();
-          
-          final resolvedUsername = await repository.resolveAuthorUsername(authorQuery);
+
+          final resolvedUsername = await repository.resolveAuthorUsername(
+            authorQuery,
+          );
           if (resolvedUsername == null) {
             throw Exception('Autor no encontrado para: "$authorQuery"');
           }
 
-          newWallpapers = await repository.searchWallpapersByAuthor(resolvedUsername, state.page);
+          newWallpapers = await repository.searchWallpapersByAuthor(
+            resolvedUsername,
+            state.page,
+          );
         } else {
-          newWallpapers = await repository.searchWallpapers(state.query, state.page, lang: state.lang);
+          newWallpapers = await repository.searchWallpapers(
+            state.query,
+            state.page,
+            lang: state.lang,
+          );
         }
       } else {
         newWallpapers = await repository.getCuratedWallpapers(state.page);
@@ -123,7 +138,8 @@ class WallpaperNotifier extends StateNotifier<WallpaperState> {
   }
 }
 
-final wallpaperProvider = StateNotifierProvider<WallpaperNotifier, WallpaperState>((ref) {
-  final repository = ref.read(wallpaperRepositoryProvider);
-  return WallpaperNotifier(repository);
-});
+final wallpaperProvider =
+    StateNotifierProvider<WallpaperNotifier, WallpaperState>((ref) {
+      final repository = ref.read(wallpaperRepositoryProvider);
+      return WallpaperNotifier(repository);
+    });

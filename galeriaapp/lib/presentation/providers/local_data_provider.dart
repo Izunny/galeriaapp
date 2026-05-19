@@ -9,6 +9,7 @@ final localStorageRepositoryProvider = Provider<LocalStorageRepository>((ref) {
   return LocalStorageRepository(sharedPreferences);
 });
 
+//aqui se definen los providers relacionados con el almacenamiento local de datos,
 class LocalDataNotifier extends StateNotifier<List<Wallpaper>> {
   final LocalStorageRepository repository;
   final String storageKey;

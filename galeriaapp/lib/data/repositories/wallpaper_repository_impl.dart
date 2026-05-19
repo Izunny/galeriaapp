@@ -5,11 +5,12 @@ import '../../domain/repositories/wallpaper_repository.dart';
 import '../datasources/unsplash_client.dart';
 import '../models/wallpaper_model.dart';
 
+// Esta clase es la implementación concreta del repositorio de wallpapers,
 class WallpaperRepositoryImpl implements WallpaperRepository {
   static const String _cachedCuratedKey = 'cached_wallpapers';
   final UnsplashClient client;
   final SharedPreferences prefs;
-
+  // que se encarga de obtener los datos de la API de Unsplash y también de manejar la caché local utilizando SharedPreferences.
   WallpaperRepositoryImpl({required this.client, required this.prefs});
 
   String _cacheKeyForCurated() => _cachedCuratedKey;
@@ -22,6 +23,7 @@ class WallpaperRepositoryImpl implements WallpaperRepository {
     return 'cached_author_${username.trim().toLowerCase()}';
   }
 
+  // Los métodos de esta clase implementan las funciones definidas en la interfaz del repositorio,
   Future<void> _saveCache(String key, List<Wallpaper> wallpapers) async {
     final cachedData = wallpapers
         .map(
@@ -48,6 +50,7 @@ class WallpaperRepositoryImpl implements WallpaperRepository {
         .toList();
   }
 
+  //
   @override
   Future<List<Wallpaper>> getCuratedWallpapers(int page) async {
     try {

@@ -12,7 +12,9 @@ class SearchHistoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searches = ref.watch(searchHistoryProvider);
     final loc = ref.watch(appLocalizationsProvider);
-
+    // Esta pantalla muestra el historial de búsquedas del usuario.
+    //Si no hay búsquedas, muestra un mensaje indicando que el historial está vacío. Si hay búsquedas,
+    //las muestra en una lista con la opción de eliminar cada búsqueda individualmente
     return Scaffold(
       appBar: AppBar(
         title: Text(loc['history']!),

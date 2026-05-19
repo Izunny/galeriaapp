@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+// Esta clase es un cliente HTTP personalizado para interactuar con la API de Unsplash,
 class UnsplashClient {
   late Dio dio;
 
@@ -18,7 +19,7 @@ class UnsplashClient {
       ),
     );
 
-    // Interceptor para manejo de errores centralizado
+    // Interceptor para manejo de errores
     dio.interceptors.add(
       InterceptorsWrapper(
         onError: (DioException e, handler) {
@@ -35,7 +36,7 @@ class UnsplashClient {
       ),
     );
   }
-
+  // y se encarga de hacer las solicitudes a la API de Unsplash para obtener los wallpapers,
   Future<List<dynamic>> getCuratedPhotos(int page, {int perPage = 20}) async {
     final response = await dio.get(
       '/photos',
@@ -44,7 +45,15 @@ class UnsplashClient {
     return response.data as List<dynamic>;
   }
 
-  Future<List<dynamic>> searchPhotos(String query, int page, {int perPage = 20, String lang = 'es'}) async {
+  // También incluye métodos para buscar fotos por consulta, obtener fotos de un usuario específico,
+  //resolver el nombre de usuario de un autor a partir de una consulta, y rastrear las descargas de fotos,
+  //todo utilizando los endpoints correspondientes de la API de Unsplash.
+  Future<List<dynamic>> searchPhotos(
+    String query,
+    int page, {
+    int perPage = 20,
+    String lang = 'es',
+  }) async {
     final response = await dio.get(
       '/search/photos',
       queryParameters: {
@@ -57,7 +66,12 @@ class UnsplashClient {
     return response.data['results'] as List<dynamic>;
   }
 
-  Future<List<dynamic>> getUserPhotos(String username, int page, {int perPage = 20}) async {
+  // Este método realiza una búsqueda de fotos en Unsplash utilizando la consulta proporcionada, el número de página,
+  Future<List<dynamic>> getUserPhotos(
+    String username,
+    int page, {
+    int perPage = 20,
+  }) async {
     final response = await dio.get(
       '/users/$username/photos',
       queryParameters: {'page': page, 'per_page': perPage},
@@ -65,6 +79,7 @@ class UnsplashClient {
     return response.data as List<dynamic>;
   }
 
+  // Este método obtiene las fotos de un usuario específico en Unsplash utilizando su nombre de usuario y el número de página.
   Future<String?> searchUserUsername(String query) async {
     try {
       final response = await dio.get(

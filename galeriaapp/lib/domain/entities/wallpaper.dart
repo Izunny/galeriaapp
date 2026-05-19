@@ -11,3 +11,4 @@ class Wallpaper {
     required this.author,
   });
 }
+// Esta clase representa la entidad principal de la aplicación, que es un fondo de pantalla 

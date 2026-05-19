@@ -12,7 +12,7 @@ class SavedWallpapersScreen extends ConsumerWidget {
   final String title;
   final StateNotifierProvider<LocalDataNotifier, List<Wallpaper>>
   wallpapersProvider;
-
+  // Esta pantalla muestra una cuadrícula de los fondos de pantalla guardados por el usuario (ya sea favoritos o descargas).
   const SavedWallpapersScreen({
     super.key,
     required this.title,

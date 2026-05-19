@@ -6,6 +6,9 @@ final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
   return ThemeNotifier();
 });
 
+//aqui se define un provider de estado para el tema de la aplicación,
+//que utiliza SharedPreferences para guardar la preferencia del usuario entre sesiones.
+//El ThemeNotifier carga el tema guardado al iniciar y permite alternar entre modo claro y oscuro.
 class ThemeNotifier extends StateNotifier<ThemeMode> {
   ThemeNotifier() : super(ThemeMode.system) {
     _loadTheme();
